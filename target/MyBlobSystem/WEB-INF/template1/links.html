@@ -1,0 +1,95 @@
+<html  lang="zh-CN"  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="http://www.thymeleaf.org" data-default-color-scheme=&#34;auto&#34;>
+<head th:replace="head"></head>
+<body>
+<!-- ###################整体头部分############################# -->
+<header th:replace="header"></header>
+<!--###################整体头部结束 ################################  -->
+<main>
+  <div class="container nopadding-x-md">
+    <div class="py-5" id="board">
+      <div class="container">
+<!--        行样式展示友链-->
+        <div class="row">
+          <div class="col-12 col-md-10 m-auto">
+<!--            友链div-->
+            <div class="row links">
+              <!--每个div代表一个友链-->
+              <div class="card col-lg-4 col-md-6 col-sm-12">
+                <!-- 整体一个 链接 卡片式链接 -->
+                <a href="https://www.livejq.top/" class="card-body hover-with-bg" target="_blank" rel="noopener">
+                  <div class="card-content">
+                    <div class="link-avatar my-auto">
+                      <!--头像-->
+                      <img src="https://www.livejq.top/img/livejqTop.jpg" srcset="/img/loading.gif" lazyload alt="liveJQ" onerror="this.onerror=null; this.srcset=null; this.src='/img/avatar.jpg'" />
+                    </div>
+                    <!--简介信息-->
+                    <div class="link-text">
+                      <div class="link-title">liveJQ</div>
+                      <div class="link-intro">没有乐趣, 何来开始</div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+                <!--引导格式-->
+            <div class="custom mx-auto">
+              <hr>
+              <p>在下方留言申请加入我的友链，按如下格式提供信息：</p>
+              <ul><li>博客名：Fluid</li><li>简介：Fluid 主题官方博客</li>
+                <li>链接：https://hexo.fluid-dev.com</li>
+                <li>图片：https://hexo.fluid-dev.com/img/favicon.png</li>
+              </ul>
+              <p><b>我的个人信息：</b></p>
+              <ul><li>博客名：tomorrow505</li><li>简介：心之所向，敝履以往。</li>
+                <li>链接：https://tomorrow505.xyz/</li>
+                <li>图片：https://tomorrow505.xyz/img/main.jpg</li>
+              </ul>
+            </div>
+            <!--  发布评论部分  -->
+            <article class="comments" id="comments" lazyload>
+              <div id="valine"></div>
+              <script type="text/javascript">
+                Fluid.utils.lazyComments('valine', function() {
+                  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+                    new Valine({
+                      el: "#valine",
+                      app_id: "HlBkB9z8NsBQl5OymmrkK6qm-gzGzoHsz",
+                      app_key: "30XfVcujY9je2cwoCu1NwYEG",
+                      placeholder: "欢迎留下您的宝贵意见~",
+                      path: window.location.pathname,
+                      avatar: "retro",
+                      meta: ["nick","mail","link"],
+                      pageSize: "10",
+                      lang: "zh-CN",
+                      highlight: true,
+                      recordIP: true,
+                      serverURLs: "",
+                    });
+                  });
+                });
+              </script>
+              <noscript>Please enable JavaScript to view the
+                <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+              </noscript>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a id="scroll-top-button" href="#" role="button">
+    <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+  </a>
+  <!--  搜索栏导入-->
+  <div th:replace="search-local"></div>
+</main>
+<!--###################  尾部部分 #######################################  -->
+<footer th:replace="footer"></footer>
+<!--###################  尾部部分结束 #######################################  -->
+<!--#################################页面内嵌脚本部分###########################################-->
+<script th:replace="endScript"></script>
+<!--#################################页面内嵌脚本部分结束###########################################-->
+
+</body>
+</html>

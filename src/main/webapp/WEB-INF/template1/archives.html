@@ -1,0 +1,60 @@
+<html  lang="zh-CN"  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="http://www.thymeleaf.org" data-default-color-scheme=&#34;auto&#34;>
+<head th:replace="head"></head>
+<body>
+<!-- ###################整体头部分############################# -->
+<header th:replace="header"></header>
+<!--###################整体头部结束 ################################  -->
+
+<main>
+    <div class="container nopadding-x-md">
+        <div class="py-5" id="board">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-10 m-auto">
+<!--                        归档显示 一个list-->
+                        <div class="list-group">
+<!--                            统计文章总数-->
+                            <p class="h4">共计 33 篇文章</p>
+                            <hr>
+<!--                           按照year分组-->
+                            <p class="h5">2021</p>
+<!--                            每篇文章显示日期、链接、标题  这里动态生成  -->
+                            <a href="/%E5%9F%BA%E4%BA%8Epython%E8%A7%A3%E5%86%B3%E9%94%90%E6%8D%B7%E6%8E%89%E7%BA%BFweb%E7%AB%AF%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95--%E5%8D%8E%E7%A7%91/" class="list-group-item list-group-item-action">
+                                <span class="archive-post-title">基于python解决锐捷掉线web端自动登录--华科</span>
+                                <time style="float: right;">11-29</time>
+                            </a>
+                        </div>
+<!--                        导航栏-->
+                        <nav aria-label="navigation">
+                            <span class="pagination" id="pagination">
+                                <span class="page-number current">1</span>
+                                <a class="page-number" href="/archives/page/2/#board">2</a>
+                                <a class="page-number" href="/archives/page/3/#board">3</a>
+                                <a class="page-number" href="/archives/page/4/#board">4</a>
+                                <a class="extend next" rel="next" href="/archives/page/2/#board">
+                                    <i class="iconfont icon-arrowright"></i></a>
+                            </span>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+    <!--    ######################################-->
+    <!--  搜索导入-->
+    <div th:replace="search-local"></div>
+</main>
+
+<!--###################  尾部部分 #######################################  -->
+<footer th:replace="footer"></footer>
+<!--###################  尾部部分结束 #######################################  -->
+<!--#################################页面内嵌脚本部分###########################################-->
+<script th:replace="endScript"></script>
+<!--#################################页面内嵌脚本部分结束###########################################-->
+
+</body>
+</html>

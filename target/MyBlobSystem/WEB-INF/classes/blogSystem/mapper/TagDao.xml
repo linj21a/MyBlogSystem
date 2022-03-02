@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuyefanhua.blobsystem.dao.TagDao">
+<!--    根据标签id查找标签的名-->
+    <select id="getTag" resultType="Tag">
+        select id,name from t_tag where id = #{id}
+    </select>
+<!--添加一个标签 -->
+    <insert id="saveTag" parameterType="Tag">
+        insert into t_tag values (#{id},#{name});
+    </insert>
+
+    <!--Tag类记录了博客id和标签id的关系，即t_Tags表 -->
+    <resultMap id="tags" type="Tag">
+<!--        id属性映射的行是t_Tags的id-->
+        <id property="id" column="tid"/>
+<!--        name映射行name-->
+        <result property="name" column="name"/>
+<!--        博客列表 每个类型是blog -->
+        <collection property="blogs" ofType="Blog">
+<!--            通过blog的id的属性 关联-->
+            <id property="id" column="bid"/>
+<!--            博客的题目 -->
+            <result property="title" column="title"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAllTag" resultType="Tag">
+        select * from blog.t_tag
+    </select>
+<!--联合查询，返回的是结果集tags  t_tag记录的是标签的属性，t_tags记录都是博客和标签id的关联属性  -->
+    <select id="getBlogTag" resultMap="tags">
+        select t.id tid, t.name, b.id bid, b.title
+        from t_tag t, t_blog b, t_tags
+        where t.id = t_tags.tag_id and b.id = t_tags.blog_id
+    </select>
+
+    <select id="getTagByName" resultType="Tag">
+        select * from t_tag where name = #{name}
+    </select>
+<!--通过标签id删除标签 -->
+    <delete id="deleteTag">
+        delete from t_tag where id = #{id}
+    </delete>
+<!--添加标签 -->
+    <update id="updateTag" parameterType="Tag">
+        update t_tag set name = #{name} where id = #{id};
+    </update>
+
+</mapper>

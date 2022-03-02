@@ -1,0 +1,26 @@
+<!--  点击搜索时，该div不再隐藏，modal fade show -->
+<div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <!--      搜索div 套两个div 标题和搜索关键字 -->
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <!--          搜索标题-->
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <!--          关闭搜索的按钮 X -->
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!--        搜索关键字-->
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <!--            local-search-input转化为一个输入栏-->
+                    <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+                </div>
+                <!--          如果搜索到东西这里会展示一个list-->
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>

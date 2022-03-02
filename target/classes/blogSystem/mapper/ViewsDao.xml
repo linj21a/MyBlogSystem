@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuyefanhua.blobsystem.dao.ViewsDao">
+<!--    这里是记录网站的访问量，区分开博客的访问量-->
+<!--日访问量-->
+    <select id="getYesterdayViewsForPeople" resultType="Integer">
+        select SUM(views) from t_views WHERE DATE_SUB(CURDATE(), INTERVAL 1 DAY)  &lt;= DATE(dates);
+    </select>
+<!--周访问量-->
+    <select id="getAWeekViewsForPeople" resultType="Integer">
+        select SUM(views) from t_views WHERE DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= DATE(dates);
+    </select>
+<!-- 月访问量 -->
+    <select id="getAMonthViewsForPeople" resultType="Integer">
+        select SUM(views) from t_views;
+    </select>
+<!--总访问量-->
+    <select id="getAllViewsForPeople" resultType="Integer">
+        select SUM(views) from t_views;
+    </select>
+<!--更新访问量  当前的时间：curdate()   设置的访问量需要判断
+ 当导入的数据不存在时则进行添加，有修改时则进行更新 mysql独有的语法：ON DUPLICATE KEY UPDATE
+ -->
+    <update id="updateViewsForPeople">
+        INSERT INTO t_views SET dates=CURDATE(),views=1 ON DUPLICATE KEY UPDATE views=views+1;
+    </update>
+<!--    -->
+
+</mapper>

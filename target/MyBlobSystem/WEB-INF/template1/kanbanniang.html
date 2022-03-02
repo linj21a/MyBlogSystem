@@ -1,0 +1,19 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--需要依赖： L2Dwidget.0.min.js-->
+<script  charset="utf-8"  src="../../static_resource/js/lib/L2Dwidget.min.js"></script>
+<!--<script  charset="utf-8"  th:src="@{/static_resource/js/lib/L2Dwidget.0.min.js}"></script>-->
+<script type="text/javascript">
+L2Dwidget.init({
+    "display": {
+        "superSample": 2,
+        "width": 200,   // 宽度
+        "height": 400,  // 高度
+        "position": "right",  // 模型位置
+        "hOffset": 0,  // 纵向偏移
+        "vOffset": 0   // 横向偏移
+    },
+    "mobile": {
+    	"show": false  // 是否在移动设备上显示
+	}
+});
+</script>

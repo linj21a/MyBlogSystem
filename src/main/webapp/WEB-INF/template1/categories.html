@@ -1,0 +1,63 @@
+<html  lang="zh-CN"  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="http://www.thymeleaf.org" data-default-color-scheme=&#34;auto&#34;>
+<head th:replace="head"></head>
+<body>
+<!-- ###################整体头部分############################# -->
+<header th:replace="header"></header>
+<!--###################整体头部结束 ################################  -->
+
+<main>
+  <div class="container nopadding-x-md">
+    <div class="py-5" id="board">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-10 m-auto">
+            <div class="category-list">
+<!--              行div 每个div表示一个类别 下面展示多篇文章或者子类别-->
+              <div class="category row">
+<!--                类别id-->
+                <a class="category-item collapsed list-group-item category-item-action col-10 col-md-11" id="heading-033e07c4c5572a50a4620f66c329ae13" role="tab" data-toggle="collapse" href="#collapse-033e07c4c5572a50a4620f66c329ae13" aria-expanded="false">
+                  折腾笔记
+                  <i class="iconfont icon-arrowright"></i>
+                </a>
+                  <!--该类别下面的内容 条数 -->
+                <a href="/categories/%E6%8A%98%E8%85%BE%E7%AC%94%E8%AE%B0/" class="category-count col-2 col-md-1">
+                  <i class="iconfont icon-articles"></i>
+                  <span>12</span>
+                </a>
+                  <!--具体的目录内容或者文章内容：-->
+                <div class="category-collapse">
+                  <div id="collapse-033e07c4c5572a50a4620f66c329ae13" class="collapse in" role="tabpanel" aria-labelledby="heading-033e07c4c5572a50a4620f66c329ae13">
+                    <!--展示的目录内容-->
+                    <a href="/%E5%9F%BA%E4%BA%8E%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BAv2ray-cloudflare%E9%9A%90%E8%97%8FIP/" class="list-group-item list-group-item-action">
+                      <span class="category-post">基于宝塔面板搭建v2ray+cloudflare隐藏IP</span>
+                    </a>
+                    <!--点击more会进入该类别展示  -->
+                    <a href="/categories/%E6%8A%98%E8%85%BE%E7%AC%94%E8%AE%B0/" class="list-group-item list-group-item-action">
+                      <span class="category-post">More...</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a id="scroll-top-button" href="#" role="button">
+    <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+  </a>
+  <!--    ######################################-->
+  <!--  搜索导入-->
+  <div th:replace="search-local"></div>
+</main>
+<!--###################  尾部部分 #######################################  -->
+<footer th:replace="footer"></footer>
+<!--###################  尾部部分结束 #######################################  -->
+<!--#################################页面内嵌脚本部分###########################################-->
+<script th:replace="endScript"></script>
+<!--#################################页面内嵌脚本部分结束###########################################-->
+
+</body>
+</html>

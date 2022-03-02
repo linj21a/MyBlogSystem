@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<!--    <mvc:annotation-driven/>-->
+<!--    <context:component-scan base-package="com.yuyefanhua.blobsystem"/>-->
+<!--    <context:component-scan base-package="com.yuyefanhua.blobsystem"/>-->
+    <import resource="dataSource.xml"/>
+    <!--    事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+    <!--    注册一个扫描配置类 设置映射器接口文件的基础包-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+<!--        dao类的位置-->
+        <property name="basePackage" value="com.yuyefanhua.blobsystem.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    <!-- 开启事务管理，扫描注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+</beans>

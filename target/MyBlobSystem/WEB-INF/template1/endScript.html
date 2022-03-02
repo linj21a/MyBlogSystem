@@ -1,0 +1,78 @@
+<!-- 脚本部分 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--#################################页面内嵌脚本部分###########################################-->
+<script th:src="@{/static/js/lib/nprogress.min.js}"></script>
+<link rel="stylesheet" th:href="@{/static/js/lib/nprogress.min.css}"/>
+<script>
+    NProgress.configure({"showSpinner": false, "trickleSpeed": 100})
+    NProgress.start()
+    window.addEventListener('load', function () {
+        NProgress.done();
+    })
+</script>
+<script th:src="@{/static/js/lib/jquery.min.js}"></script>
+<script th:src="@{/static/js/lib/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/lib/debouncer.js}"></script>
+<script th:src="@{/static/js/lib/events.js}"></script>
+<script th:src="@{/static/js/lib/plugins.js}"></script>
+
+<script th:src="@{/static/js/lib/img-lazyload.js}"></script>
+<script th:src="@{/static/js/lib/anchor.min.js}"></script>
+<script defer th:src="@{/static/js/lib/clipboard.min.js}"></script>
+<script defer th:src="@{/static/js/lib/leancloud.js}"></script>
+<script th:src="@{/static/js/lib/typed.min.js}"></script>
+<script>
+    (function (window, document) {
+        const typing = Fluid.plugins.typing;
+        const title = document.getElementById('subtitle').title;
+
+        typing(title)
+
+    })(window, document);
+</script>
+<script th:src="@{/static/js/lib/local-search.js}"></script>
+<script>
+    // 搜索栏
+    (function () {
+        const path = "/local-search.xml";
+        $('#local-search-input').on('click', function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+        });
+        $('#modalSearch').on('shown.bs.modal', function () {
+            $('#local-search-input').focus();
+        });
+    })()
+</script>
+
+<script defer>
+    const _hmt = _hmt || [];
+    (function () {
+        const hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?6b843aa5a4ef58e77922cd321ec00d74";
+        const s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script th:src="@{/static/js/lib/boot.js}"></script>
+<script type="text/javascript" color="165,165,165" opacity='0.9' zIndex="-2" count="500"
+        th:src="@{/static/js/lib/canvas-nest.min.js}">
+</script>
+<script   charset="utf-8" th:src="@{/static/js/lib/L2Dwidget.min.js}"></script>
+<script  charset="utf-8" async  th:src="@{/static/js/lib/L2Dwidget.0.min.js}"></script>
+<script>
+    L2Dwidget.init({
+                    pluginRootPath: '/static/js/',                 //指向你的目录
+                    pluginJsPath: 'lib/',                       //指向你的目录
+                    pluginModelPath: 'live2d-widget-model-shizuku/assets/',                                   //中间这个koharu就是你的老婆,想换个老婆,换这个就可以了
+                    tagMode: false,
+                    debug: false,
+                    model: {
+                        jsonPath: '/static/js/lib/live2d-widget-model-shizuku/assets/shizuku.model.json' },       //中间这个koharu就是你的老婆,想换个老婆,换这个就可以了
+                    display: {
+                        position: 'right', width: 150, height: 300 },                               //调整大小,和位置
+                    mobile: {
+                        show: true },                                                                //要不要盯着你的鼠标看
+                    log: false});
+</script>
+</html>

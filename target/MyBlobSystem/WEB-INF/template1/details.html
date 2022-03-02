@@ -1,0 +1,140 @@
+<html  lang="zh-CN"  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="http://www.thymeleaf.org" data-default-color-scheme=&#34;auto&#34;>
+<head th:replace="head"></head>
+<body>
+<!-- ###################整体头部分############################# -->
+<header th:replace="header"></header>
+<!--###################整体头部结束 ################################  -->
+<!--header里面需要更新subtitle 以及写入时间信息等-->
+<main>
+  <div class="container-fluid nopadding-x">
+    <div class="row nomargin-x">
+      <div class="d-none d-lg-block col-lg-2"></div>
+      <div class="col-lg-8 nopadding-x-md">
+        <div class="container nopadding-x-md" id="board-ctn">
+          <div class="py-5" id="board">
+<!--              展示文章：这里可以添加redis 缓存吗？-->
+            <article class="post-content mx-auto">
+                <!--文章标题-->
+              <h1 style="display: none">Sublime Text3 激活过程（2021）</h1>
+                <!--笔记时间信息-->
+              <p class="note note-info">
+                本文最后更新于：8 个月前
+              </p>
+              <div class="markdown-body">
+                <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr>
+                <p>一直都在用 sublime text3 编写js代码，这几天一直说注册码invalid，然后删除掉之后显示未注册，未注册也能用，但是经常会弹窗叫购买。。</p>
+                <p>所以在网上找了一番：</p>
+                <div class="hljs code-wrapper"><pre><code class="hljs dns">----- BEGIN LICENSE -----
+Member J2TeaM
+Single User License
+EA7E-<span class="hljs-number">1011316</span>
+D7DA350E <span class="hljs-number">1B8B0760</span> <span class="hljs-number">972F8B60</span> F<span class="hljs-number">3E64036</span>
+B<span class="hljs-number">9B4E234</span> F356F38F <span class="hljs-number">0</span>AD1E3B7 <span class="hljs-number">0</span>E9C5FAD
+FA0A2ABE <span class="hljs-number">25</span>F65BD8 D<span class="hljs-number">51458E5</span> <span class="hljs-number">3923</span>CE80
+<span class="hljs-number">87428428</span> <span class="hljs-number">79079A01</span> AA69F319 A1AF29A4
+A684C2DC <span class="hljs-number">0B1583D4</span> <span class="hljs-number">19</span>CBD290 <span class="hljs-number">217618</span>CD
+<span class="hljs-number">5653E0A0</span> BACE3948 BB2EE45E <span class="hljs-number">422D2C87</span>
+DD9AF44B <span class="hljs-number">99C49590</span> D2DBDEE1 <span class="hljs-number">75860</span>FD2
+<span class="hljs-number">8</span>C8BB2AD B2ECE5A4 EFC08AF2 <span class="hljs-number">25A9B864</span>
+------ END LICENSE ------</code></pre></div>
+                <p>搞不好哪天又用不了了，哭~~</p>
+                <h3 id="修改host"><a href="#修改host" class="headerlink" title="修改host"></a>修改host</h3><hr>
+                <p>即使注册码能用，也一会就失效了，所以还是为了万全改一个host：</p>
+                <div class="hljs code-wrapper"><pre><code class="hljs accesslog"># sublimetext
+<span class="hljs-number">0.0.0.0</span> license.sublimehq.com
+<span class="hljs-number">0.0.0.0</span> <span class="hljs-number">45</span>.<span class="hljs-number">55</span>.<span class="hljs-number">255</span>.<span class="hljs-number">55</span>
+<span class="hljs-number">0.0.0.0</span> <span class="hljs-number">45</span>.<span class="hljs-number">55</span>.<span class="hljs-number">41</span>.<span class="hljs-number">223</span>
+<span class="hljs-number">127.0.0.1</span> www.sublimetext.com
+<span class="hljs-number">127.0.0.1</span> sublimetext.com
+<span class="hljs-number">127.0.0.1</span> sublimehq.com
+<span class="hljs-number">127.0.0.1</span> telemetry.sublimehq.com</code></pre></div>
+                <p>用了一阵子了，没有移除注册码了，应该是已经成功了。</p>
+                <p><a target="_blank" rel="noopener" href="https://imgtu.com/i/c92pY6"><img src="https://z3.ax1x.com/2021/03/29/c92pY6.png" srcset="/img/loading.gif" lazyload alt="c92pY6.png"></a></p>
+                <p>记录一下。后期看看还有没有有用的注册码。</p>
+              </div>
+              <hr>
+<!--                获取所在的标签、类别  -->
+              <div>
+                <div class="post-metas mb-3">
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    <a class="hover-with-bg" href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/">编程学习</a>
+                  </div>
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    <a class="hover-with-bg" href="/tags/%E7%BC%96%E7%A8%8B/">编程</a>
+                    <a class="hover-with-bg" href="/tags/%E5%AD%A6%E4%B9%A0/">学习</a>
+                  </div>
+                </div>
+                <hr>
+
+                <div class="post-donate">
+                    <!--打赏部分-->
+                  <div id="donate_board" class="donate_bar center">
+                      <span class="donate_txt">坚持技术分享，你的支持将鼓励我继续创作！</span>
+                        <!--打赏按钮 该按钮如果被点击，则下面的div会被展示 -->
+                    <input type="button" id="btn_donate" style="background-color: red; color: white; border: none; height=35; width=80" value="打赏" />
+                    <br>
+                  </div>
+                    <!--    按钮被点击，会被展示                -->
+                  <div id="donate_guide" class="donate_bar center" style="display: none">
+                    <img th:src="@{/static/images/donate/ali_pay.png}" srcset="/static/images/loading.gif" lazyload alt="支付宝打赏">
+                    <img th:src="/static/images/donate/wechat_pay.png" srcset="/static/images/loading.gif" lazyload alt="微信打赏">
+                  </div>
+                    <!-- 给打赏按钮添加单击事件-->
+                  <script type="text/javascript">
+                    document.getElementById('btn_donate').onclick = function(){
+                      var qr=document.getElementById("donate_guide");
+                      "none"===qr.style.display?qr.style.display="block":qr.style.display="none"
+                    }
+                  </script>
+                </div>
+                <p class="note note-warning">
+                  本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                </p>
+<!--                  上一篇文章和下一篇文章的实现  -->
+                <div class="post-prevnext">
+<!--                    上一篇文章-->
+                  <article class="post-prev col-6">
+                    <a href="/PT%E5%8F%91%E5%B8%83%E4%B9%8B%E4%B8%80%E9%94%AE%E8%BD%AC%E8%BD%BD%E8%84%9A%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97-2/">
+                      <i class="iconfont icon-arrowleft"></i>
+                      <span class="hidden-mobile">PT发布之一键转载脚本使用指南(2)</span>
+                      <span class="visible-mobile">上一篇</span>
+                    </a>
+                  </article>
+<!--                    下一篇文章的实现 -->
+                  <article class="post-next col-6">
+                    <a href="/python%E6%93%8D%E4%BD%9C%E7%A7%8D%E5%AD%90%E6%96%87%E4%BB%B6%E7%9A%84%E5%87%A0%E7%82%B9%E5%BF%83%E5%BE%97/">
+                      <span class="hidden-mobile">python操作种子文件的几点心得</span>
+                      <span class="visible-mobile">下一篇</span>
+                      <i class="iconfont icon-arrowright"></i>
+                    </a>
+                  </article>
+                </div>
+              </div>
+<!--                评论配置  -->
+            <article th:replace="article_comment"></article>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a id="scroll-top-button" href="#" role="button">
+    <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+  </a>
+    <!--    ######################################-->
+    <!--  搜索导入-->
+    <div th:replace="search-local"></div>
+</main>
+<!--###################  尾部部分 #######################################  -->
+<footer th:replace="footer"></footer>
+<!--###################  尾部部分结束 #######################################  -->
+<!--#################################页面内嵌脚本部分###########################################-->
+<script th:replace="endScript"></script>
+<!--#################################页面内嵌脚本部分结束###########################################-->
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuyefanhua.blobsystem.dao.TypeDao">
+<!--    根据类型的id查询 -->
+    <select id="getType" resultType="Type">
+        select id,name from t_type where id = #{id}
+    </select>
+<!--添加的一个 分类-->
+    <insert id="saveType" parameterType="Type">
+        insert into t_type values (#{id},#{name});
+    </insert>
+<!--    结果集定义： 返回的是type类型 -->
+    <resultMap id="type" type="Type">
+<!--        id为类型的id-->
+        <id property="id" column="tid"/>
+<!--        类型的名字-->
+        <result property="name" column="name"/>
+<!--        返回的结果有属于该类的所有博客-->
+        <collection property="blogs" ofType="Blog">
+<!--            blog.id映射行bid -->
+            <id property="id" column="bid"/>
+            <result property="title" column="title"/>
+            <result property="typeId" column="type_id"/>
+        </collection>
+    </resultMap>
+<!--根据博客的类型id 查询 其类型-->
+    <select id="getBlogType" resultMap="type">
+        select t.id tid, t.name, b.id bid, b.title, b.type_id
+        from t_type t, t_blog b
+        where t.id = b.type_id
+    </select>
+<!--    查询所有的类型数据 -->
+    <select id="getAllType" resultType="Type">
+        select * from t_type
+    </select>
+<!--根据 类型名 查询数据-->
+    <select id="getTypeByName" resultType="Type">
+        select * from t_type where name = #{name}
+    </select>
+<!--删除一个分类-->
+    <delete id="deleteType" >
+        delete from t_type where id = #{id}
+    </delete>
+<!--添加一个分类-->
+    <update id="updateType" parameterType="Type">
+        update t_type set name = #{name} where id = #{id};
+    </update>
+
+</mapper>
