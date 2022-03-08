@@ -11,11 +11,11 @@
        http://www.springframework.org/schema/jdbc
            http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
     <!-- 引入属性文件 -->
-    <context:property-placeholder location="classpath:/blogSystem/db.properties" />
+<!--    <context:property-placeholder location="classpath:/blogSystem/db.properties" />-->
     <!--    开发环境 使用嵌入式数据源-->
     <beans profile="qa">
         <jdbc:embedded-database id="dataSource" type="H2">
-            <jdbc:script location="classpath:blogSystem/blob.sql"/>
+            <jdbc:script location="classpath:blogSystem/blog.sql"/>
         </jdbc:embedded-database>
     </beans>
     <!-- 测试环境  -->

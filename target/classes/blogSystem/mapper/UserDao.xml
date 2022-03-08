@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yuyefanhua.blobsystem.dao.UserDao">
+<mapper namespace="com.yuyefanhua.blogsystem.dao.UserDao">
 
     <select id="queryByUsernameAndPassword" resultType="User">
         select * from t_user

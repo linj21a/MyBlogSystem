@@ -1,231 +1,348 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>编辑/发布博客</title>
+    <link rel="stylesheet" href="/static/js/lib/bootstrap-5.1.0-dist/css/bootstrap.min.css"
+          th:href="@{/static/js/lib/bootstrap-5.1.0-dist/css/bootstrap.min.css}"/>
+    <!--  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>-->
+    <!--  <script th:src="@{/static/js/lib/bootstrap-5.1.0-dist/js/bootstrap.bundle.min.js}"></script>-->
+    <script th:src="@{/static/js/lib/bootstrap-5.1.0-dist/js/bootstrap.min.js}"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/static/css/github-markdown.min.css"
+          th:href="@{/static/css/github-markdown.min.css}"/>
+    <script type="text/javascript" src="/static/js/lib/showdown-master/dist/showdown.min.js"
+            th:src="@{/static/js/lib/showdown-master/dist/showdown.min.js}"
+    ></script>
+    <script type="text/javascript" src="/static/js/lib/bootstrap-5.1.0-dist/js/bootstrap.min.js" th:src="@{/static/js/lib/bootstrap-5.1.0-dist/js/bootstrap.min.js}">
+    </script>
+    <!--    代码高亮组件-->
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
 
-<head th:replace="admin/_fragments :: head(~{::title})">
-  <meta charset="UTF-8">
-  <title>博客发布</title>
+    <style>
+        #editor {
+            display: flex;
+            min-height: 600px;
+            width: 100%;
+        }
+        #md-area {
+            width: 100%;
+            background: #f5f5f5;
+            border: 1px solid #111;
+
+        }
+        #view-area {
+            width: 100%;
+            border: 1px solid #111;
+        }
+        /*Github主题要求的样式引入*/
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+        }
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+
+    </style>
 </head>
 
 <body>
-
-  <!--导航-->
-  <nav th:replace="admin/_fragments :: menu(1)" >
-
-  </nav>
-
-  <div class="ui attached pointing menu">
-    <div class="ui container">
-      <div class="right menu">
-        <a href="#" th:href="@{/admin/blogs/input}" class="teal active item">发布</a>
-        <a href="#" th:href="@{/admin/blogs}" class="item">列表</a>
-      </div>
+<div id="editor" class="layout">
+    <!--    编辑内容的div-->
+    <!--    onkeyup添加实时预览 -->
+    <textarea id="md-area" th:text="${blog.content}" onkeyup="mdConverter()"></textarea>  <!-- 键盘每次点击实时调用 -->
+    <!--    内容div  实时预览-->
+    <div class="button-bar">
+        <!--        btn-group-vertical让按钮竖直排列 -->
+        <div class="button-bar__inner button-bar__inner--top btn-group-vertical">
+            <button id="hidden_button" tour-step-anchor="editor" data-title="隐藏/显示右侧预览"
+                    class="button-bar__button button-bar__button--side-preview-toggler button button-bar__button--on">
+                <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"><title>隐藏/显示右侧预览</title>
+                    <g id="隐藏/显示右侧预览" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="编组备份"><rect id="Rectangle-4" x="0" y="0" width="16" height="16"></rect>
+                            <path d="M15,1 C15.5522847,1 16,1.44771525 16,2 L16,14 C16,14.5522847 15.5522847,15 15,15 L1,15 C0.44771525,15 0,14.5522847 0,14 L0,2 C0,1.44771525 0.44771525,1 1,1 L15,1 Z M7.001,3 L2,3 L2,13 L7.001,13 L7.001,3 Z M14,3 L9.001,3 L9.001,13 L14,13 L14,3 Z" id="形状" fill="#555666" fill-rule="nonzero"></path></g></g></svg>
+            </button>
+            <button id="view-button" data-title="预览模式" class="button-bar__button button-bar__button--editor-toggler button"><svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>预览</title> <g id="预览" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="全屏"><rect id="Rectangle-4" x="0" y="0" width="16" height="16"></rect> <path d="M8,6 C9.1045695,6 10,6.8954305 10,8 C10,9.1045695 9.1045695,10 8,10 C6.8954305,10 6,9.1045695 6,8 C6,6.8954305 6.8954305,6 8,6 Z" id="矩形" fill="#555666" fill-rule="nonzero"></path> <path d="M8,2 C13,2 16,5.5 16,8 C16,10.5 13,14 8,14 C3,14 0,10.5 0,8 C0,5.5 3,2 8,2 Z M8,4 C4.5710714,4 2,6.22047075 2,8 C2,9.77952925 4.5710714,12 8,12 C11.4289286,12 14,9.77952925 14,8 C14,6.22047075 11.4289286,4 8,4 Z" id="路径" fill="#555666" fill-rule="nonzero"></path></g></g></svg></button>
+            <button class="button-bar__button button-bar__button--side-preview-toggler button button-bar__button--on" onclick="window.history.go(-1)" >取消</button>
+<!--            弹窗按钮-->
+            <button type="button" data-title="保存/发布" class="button-bar__button button-bar__button--side-preview-toggler button button-bar__button--on"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="16px" height="16px" viewBox="0 0 16 16">
+                    <circle cx="10" cy="5" r="10" stroke="black" stroke-width="2" fill="green" />
+                </svg>
+            </button>
+        </div>
     </div>
-  </div>
+    <!--    结果样式 -->
+    <article id="view-area" class="markdown-body">            <!-- github主题样式应用 -->
+    </article>
 
-  <!--中间内容-->
-  <div  class="m-container m-padded-tb-big">
-    <div class="ui container">
-      <form id="blog-form" action="#" th:object="${blog}" th:action="@{/admin/blogs}" method="post" class="ui form">
-        <input type="hidden" name="published" th:value="*{published}">  <!--发布状态-->
-        <input type="hidden" name="id" th:value="*{id}">
-        <div class="required field">
-          <div class="ui left labeled input">
-            <div class="ui selection compact teal basic dropdown label">
-              <input type="hidden" value="原创" name="flag" th:value="*{flag}" >
-              <i class="dropdown icon"></i>
-              <div class="text">原创</div>
-              <div class="menu">
-                <div class="item" data-value="原创">原创</div>
-                <div class="item" data-value="转载">转载</div>
-                <div class="item" data-value="翻译">翻译</div>
-              </div>
+</div>
+
+
+<!--下面是一个弹窗功能，点击发布，则添加一个弹出div，设置其他的属性-->
+<!--中间内容 使用boostrap的模态弹框-->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">发布博客</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <input type="text" name="title" placeholder="标题" th:value="*{title}">
-          </div>
-        </div>
+            <div class="modal-body">
+                <!--      该表单绑定了一个object ：blog  -->
+<!--                使用autocomplete关闭缓存  -->
+                <form id="blog-form" action="#" autocomplete="off" th:object="${blog}" th:action="@{/admin/blogs}" method="post"
+                      class="ui form">
+                    <div>
+                        <!--        隐藏域：草稿还是发布 保存按钮则为草稿、发布按钮则为发布-->
+                        <div class="field mb-3"><input type="hidden" name="published" th:value="*{published}">
+                            <!--发布状态--></div>
+                        <div class="field mb-3"><input type="hidden" name="id" th:value="*{id}"> <!--        博客id-->
+                        </div>
+                        <!--        其他属性则为输入  -->
+                        <!--          flag为下拉菜单选择-->
+                        <div class="field mb-3">
+                            <!--            标题  -->
+                            <label>标题
+                                <input class="form-control" type="text" name="title" placeholder="20字符以内"
+                                       th:value="*{title}"></label>
+                        </div>
+                        <!--required表示必须要填-->
+                        <div class="required field mb-3">
+                            <a>创作类型</a>
+                            <select class="form-select" name="flag" aria-label="Default select example"
+                                    th:placeholder="请选择.." th:value="*{flag}">
+                                <!--          选择的类型：-->
+                                <option value="原创">原创</option>
+                                <option value="转载">转载</option>
+                                <option value="翻译">翻译</option>
+                            </select>
+                        </div>
+                        <!--类型：-->
+                        <div class="required field mb-3">
 
-        <div class="two fields">
+                            <!--         typeId 会将id值赋给blog的typeId -->
+                            <!--          需要加一次查找,如果找不到，就插入新的type 设置到blog-->
+                            <!--原始的类型id记忆它原始的类型id  根据类型名来看id是否存在，存在则无需插入，否则需要插入-->
+                            <input type="hidden" name="typeId"  th:value="*{typeId} != null ? *{typeId}:null">
+                            <label>所属类型
+                                <input type="text" class="form-label" name="type.name" list="select_type" placeholder="输入自定义类型" th:value="*{type}!=null?*{type.name}:null">
+                            </label>
+                            <!--          这个则是用来显示给前端看的value框  -->
+                            <datalist id="select_type">
+                                <!--th:value="${type.id} -->
+                                <option th:each="type:${types}" th:value="${type.name}"></option>
+                                <!--            这里添加ajax，动态添加id name到数据库里面 ，同时允许动态删除-->
+                            </datalist>
+                            <!--         type.name 会将name值赋给blog的type对象 -->
+                            <!--                        后端将查询类型数据库，看id和name是否匹配，不匹配则执行插入type操作 -->
 
-          <div class="required field">
-            <div class="ui left labeled action input">
-              <label class="ui compact teal basic label">分类</label>
-              <div class="ui fluid selection dropdown">
-                <!-- type.id 会将id值赋给blog的type对象-->
-                <input type="hidden" name="type.id" th:value="*{type} != null ? *{type.id}">
-                <i class="dropdown icon"></i>
-                <div class="default text">分类</div>
-                <div class="menu">
-                  <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">摸鱼方法</div>
-                </div>
-              </div>
+                        </div>
+                        <!--        标签  输入框，以,号隔开即可  然后最多允许输入三个标签   这里改为input标签-->
+                        <div class="required field mb-3">
+                            <a>标签</a>
+                            <!--          tagIds: 1,2,3,4...  这里如何让input和select嵌入一起-->
+                            <input id="tagIds" type="hidden" name="tagIds" th:value="*{tagIds}">
+                            <select id="select_tag" class="form-select">
+                                <option value="" disabled selected hidden>选择标签（最多三个）</option>
+                                <option th:each="tag:${tags}" th:value="${tag.id}" th:text="${tag.name}">
+                                </option>
+                            </select>
+                            <input class="form-control" id="tagName" placeholder="输入标签(#号隔开)" name="input_tags" list="select_tag">
+                            <!--                        也传到tagIds，处理一波，选择三个能够转换的标签表示 -->
+                        </div>
+                        <!-- 博客的大头照 -->
+                        <div class="field mb-3">
+                            <div class="ui left labeled input">
+                                <label class="ui teal basic label">博客图标</label>
+                                <!--              这里应该改为文件上传  允许为空  -->
+                                <input type="file" name="firstPicture" th:value="*{firstPicture}" placeholder="首图引用地址">
+                            </div>
+                        </div>
+                        <!--博客内容，隐藏-->
+                        <div class="required field">
+                            <!--              content应该改为拉取md文件，然后使用md组件渲染-->
+                            <textarea id="save_blogcontent" style="display: none" name="content" th:text="*{content}" placeholder="博客内容..."></textarea>
+                        </div>
+                        <!--                        赞赏、推荐、转载声明、是否允许评论-->
+                        <div class="inline fields flex-column">
+                            <!--          推荐单选框 -->
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" id="recommend" name="recommend" checked th:checked="*{recommend}"
+                                           class="hidden">
+                                    <label for="recommend">推荐</label>
+                                </div>
+                            </div>
+                            <!--          转载声明  -->
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" id="shareStatement" name="shareStatement"
+                                           th:checked="*{shareStatement}" class="hidden">
+                                    <label for="shareStatement">转载声明</label>
+                                </div>
+                            </div>
+                            <!--允许打赏-->
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" id="appreciation" name="appreciation"
+                                           th:checked="*{appreciation}" class="hidden">
+                                    <label for="appreciation">赞赏</label>
+                                </div>
+                            </div>
+                            <!--允许评论-->
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" id="commentabled" name="commentabled"
+                                           th:checked="*{commentabled}" class="hidden">
+                                    <label for="commentabled">评论</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 错误信息-->
+                        <div class="ui error message"></div>
+                    </div>
+                </form>
             </div>
-          </div>
-
-          <div class=" field">
-            <div class="ui left labeled action input">
-              <label class="ui compact teal basic label">标签</label>
-              <div class="ui fluid selection multiple search  dropdown">
-                <input type="hidden" name="tagIds" th:value="*{tagIds}" >
-                <i class="dropdown icon"></i>
-                <div class="default text">标签</div>
-                <div class="menu">
-                  <div th:each="tag : ${tags}" class="item" data-value="1" th:data-value="${tag.id}" th:text="${tag.name}">java</div>
-                </div>
-              </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" id="save-btn" class="btn btn-secondary">保存</button>
+                <button type="submit" id="publish-btn" class="btn btn-primary">发布</button>
             </div>
-          </div>
         </div>
-
-        <div class="required field">  <!--required表示必须要填-->
-          <div class="ui left labeled input">
-            <label class="ui teal basic label">首图</label>
-            <input type="text" name="firstPicture" th:value="*{firstPicture}" placeholder="首图引用地址">
-          </div>
-        </div>
-
-        <div class="required field">
-          <div id="md-content" style="z-index: 1 !important;">
-           <textarea name="content" th:text="*{content}" placeholder="博客内容..." maxlength="300"></textarea>
-          </div>
-        </div>
-
-        <div class="required field">
-          <div id="md-description" style="z-index: 1 !important;">
-            <textarea name="description" th:text="*{description}" placeholder="博客描述..." maxlength="300"></textarea>
-          </div>
-        </div>
-
-        <div class="inline fields">
-
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" id="recommend" name="recommend" checked th:checked="*{recommend}" class="hidden">
-              <label for="recommend">推荐</label>
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" id="shareStatement" name="shareStatement" th:checked="*{shareStatement}" class="hidden">
-              <label for="shareStatement">转载声明</label>
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" id="appreciation" name="appreciation" th:checked="*{appreciation}" class="hidden">
-              <label for="appreciation">赞赏</label>
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" id="commentabled" name="commentabled" th:checked="*{commentabled}" class="hidden">
-              <label for="commentabled">评论</label>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="ui error message"></div>
-
-        <div class="ui right aligned container">
-          <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
-          <button type="button" id="save-btn" class="ui secondary button">保存</button>
-          <button type="button" id="publish-btn" class="ui teal button">发布</button>
-        </div>
-
-      </form>
     </div>
-  </div>
+</div>
 
-  <br>
-  <br>
-  <!--底部footer-->
-  <footer th:replace="admin/_fragments :: footer" >
+<th:block th:replace="admin/_fragments :: script">
+</th:block>
+<!--md文档转换为html-->
+<script type="text/javascript">
+    function mdConverter() {
+        var md = document.getElementById("md-area").value;
+        var converter = new showdown.Converter();  //增加拓展table
+        converter.setOption('tables', true);  //启用表格选项。从showdown 1.2.0版开始，表支持已作为可选功能移入核心拓展，showdown.table.min.js扩展已被弃用
+        document.getElementById("view-area").innerHTML = converter.makeHtml(md);
+        //这里引入代码高亮（实时加载高亮的代码）
+        document.querySelectorAll('pre code').forEach((el) => {
+            hljs.highlightElement(el);
+        });
 
-  </footer>
-
-  <th:block th:replace="admin/_fragments :: script">
-
-  </th:block>
-
-
-  <script>
-
-    //初始化Markdown编辑器
-    var contentEditor;
-    $(function() {
-      contentEditor = editormd("md-content", {
-        width   : "100%",
-        height  : 640,
-        syncScrolling : "single",
-//        path    : "../static/lib/editormd/lib/"
-        path    : "/lib/editormd/lib/"
-      });
-    });
-
+    }
+    mdConverter();
+    //点击隐藏按钮，隐藏预览框 则只剩下编辑框
+    document.getElementById("hidden_button").onclick=function (){
+        var textview = document.getElementById("view-area");
+        if(textview.style.display === "none"){
+            textview.style.display = "block";
+        }else{
+            textview.style.display = "none";
+        }
+    }
+    //点击预览模式，则编辑框不显示，只显示预览框
+    document.getElementById("view-button").onclick=function (){
+        var article = document.getElementById("md-area");
+        //取消预览？
+        if(article.style.display === "none"){//否则显示
+            article.style.display = "block";
+        }else{//编辑框隐藏
+            article.style.display = "none";
+        }
+    }
     $('.menu.toggle').click(function () {
-      $('.m-item').toggleClass('m-mobile-hide');
+        $('.m-item').toggleClass('m-mobile-hide');
     });
 
     $('.ui.dropdown').dropdown({
-      on : 'hover'
+        on: 'hover'
     });
 
     $('#save-btn').click(function () {     //点击保存，修改发布状态为false
-      $('[name="published"]').val(false);
-      $('#blog-form').submit();
+        $('[name="published"]').val(false);
+        //将编辑的内容放到里面
+        var md = document.getElementById("md-area").value;
+        //将编辑的内容放到里面
+        document.getElementById("save_blogcontent").value = document.getElementById("md-area").value;
+        $('#blog-form').submit();
     });
 
-
-    $('#publish-btn').click(function () {   //点击发布，修改发布状态为true
-      $('[name="published"]').val(true);
-      $('#blog-form').submit();
+    $('#publish-btn').click(function () {   //点击发布，修改发布状态为true  document的就是onclick，jquery的就是click
+        $('[name="published"]').val(true);
+        //将编辑的内容放到里面
+        document.getElementById("save_blogcontent").value = document.getElementById("md-area").value;
+        $('#blog-form').submit();
     });
-
-
-
+    //表单校验
     $('.ui.form').form({    //表单元素非空验证
-      fields : {
-        title : {
-          identifier: 'title',
-          rules: [{
-            type : 'empty',
-            prompt: '标题：请输入博客标题'
-          }]
-        },
-        content : {
-          identifier: 'content',
-          rules: [{
-            type : 'empty',
-            prompt: '标题：请输入博客内容'
-          }]
-        },
-        typeId : {
-          identifier: 'type.id',
-          rules: [{
-            type : 'empty',
-            prompt: '标题：请输入博客分类'
-          }]
-        },
-        firstPicture : {
-          identifier: 'firstPicture',
-          rules: [{
-            type : 'empty',
-            prompt: '标题：请输入博客首图'
-          }]
-        },
-        description : {
-          identifier: 'description',
-          rules: [{
-            type : 'empty',
-            prompt: '标题：请输入博客描述'
-          }]
+        fields: {
+            title: {
+                identifier: 'title',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客标题'
+                }]
+            },
+            content: {
+                identifier: 'content',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客内容'
+                }]
+            },
+            type: {
+                identifier: 'type.name',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客分类'
+                }]
+            },
+            input_tags:{
+                identifier:'input_tags',
+                rules:[{
+                    type:'empty',
+                    prompt:'标题：请选择标签或者输入标签'
+                }]
+            }
         }
-      }
     });
 
-  </script>
+    $(function () {
+        $("#select_tag").change(function () {
+            var selectTag = document.getElementById("select_tag");
+            var index = selectTag.selectedIndex;
+            var value1 = selectTag.options[index].value;//这个单选框绑定的value
+            var value2 = selectTag.options[index].innerText;//这个单选框绑定的value
+            document.getElementById("select_tag").options[0].selected = true;//选中的值放到下面的输入栏，但下拉框的值不允许改变
+            //选择的值必须以，号隔开
+            var tagValue = document.getElementById('tagName').value;
+            if (tagValue.split('#').length > 3) {//必然已经选了三个
+                alert("标签只能选择三个！");
+                return;
+            }
+            for(var j=0;j<tagValue.length;j++){
+                if(tagValue.charAt(j)===','||tagValue.charAt(j)===','||tagValue.charAt(j)===';'||tagValue.charAt(j)==='/'|tagValue.charAt(j)==='\\'){
+                    alert("输入标签不合法(#号隔开，最多三个标签)");
+                    return;
+                }
+            }
+            var tagIds = document.getElementById('tagIds').value;
+            document.getElementById('tagName').value = tagValue + value2+"#";
+            document.getElementById('tagIds').value = tagIds + "," + value1;
+
+        });
+    });
+</script>
 </body>
 </html>

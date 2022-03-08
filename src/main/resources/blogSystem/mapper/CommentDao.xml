@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yuyefanhua.blobsystem.dao.CommentDao">
+<mapper namespace="com.yuyefanhua.blogsystem.dao.CommentDao">
 <!--    结果集  返回的commment配置 -->
     <resultMap id="comment" type="Comment">
 <!--        评论id-->

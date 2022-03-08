@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yuyefanhua.blobsystem.dao.ViewsDao">
+<mapper namespace="com.yuyefanhua.blogsystem.dao.ViewsDao">
 <!--    这里是记录网站的访问量，区分开博客的访问量-->
 <!--日访问量-->
     <select id="getYesterdayViewsForPeople" resultType="Integer">

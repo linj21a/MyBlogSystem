@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--BlogDao的映射文件，实现其方法 -->
 <!--namespace应该写为全限定名字 或者使用配置文件配置生成-->
-<mapper namespace="com.yuyefanhua.blobsystem.dao.BlogDao">
+<mapper namespace="com.yuyefanhua.blogsystem.dao.BlogDao">
 <!--    结果集-->
     <resultMap id="blog" type="Blog">
         <id property="id" column="id"/>
@@ -107,23 +107,21 @@
         where b.type_id = t.id and  u.id = b.user_id and (b.title like #{pattern} or b.content like  #{pattern})
         order by b.update_time desc
     </select>
-<!-- 全局搜索博客 按照title主题关键字搜索 -->
+<!-- 全局搜索博客 按照title主题关键字搜索
+ 同时使用了mybatis里面的多条件查询  允许某些条件为null
+ -->
     <select id="searchAllBlog" parameterType="Blog" resultMap="blog">
-        <bind name="pattern" value="'%' + title + '%'" />    /*模糊查询*/
-        select b.id, b.title, b.update_time, b.recommend, b.published, b.type_id, t.id, t.name
-        from t_blog b ,t_type t
+        select b.id, b.title, b.update_time, b.recommend, b.published, b.type_id, t.id typeid, t.name typename
+        from t_blog b left join t_type t on b.type_id=t.id
         <where>
-            <if test="1 == 1">
-                b.type_id = t.id    /*博客类型id=类型id*/
-            </if>
             <if test="typeId != null">
-                and b.type_id = #{typeId}       /*根据博客类型查询*/
+                b.type_id = #{typeId}       /*根据博客类型查询*/
             </if>
-            <if test="recommend != null">
+            <if test="recommend !=null">
                 and b.recommend = #{recommend}   /*根据博客推荐查询*/
             </if>
-            <if test="title != null">
-                and b.title like #{pattern}   /*根据博客title模糊查询*/
+            <if test="title != null and title !='' ">
+                and b.title like concat('%',#{title},'%')   /*根据博客title模糊查询*/
             </if>
         </where>
     </select>

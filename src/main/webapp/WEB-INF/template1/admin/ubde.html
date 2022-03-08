@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/static/js/lib/bootstrap-5.1.0-dist/css/bootstrap.min.css"
+          th:href="@{/static/js/lib/bootstrap-5.1.0-dist/css/bootstrap.min.css}"/>
+    <!--  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>-->
+    <!--  <script th:src="@{/static/js/lib/bootstrap-5.1.0-dist/js/bootstrap.bundle.min.js}"></script>-->
+    <script th:src="@{/static/js/lib/bootstrap-5.1.0-dist/js/bootstrap.min.js}"></script>
+    <!--    带编辑的下拉框-->
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
+    <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css"
+          rel="stylesheet">
+
+    <title>这是一个测试文件</title>
+</head>
+<body>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    保存/发布
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">发布博客</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!--      该表单绑定了一个object ：blog  -->
+                <form id="blog-form" action="#" th:object="${blog}" th:action="@{/admin/blogs}" method="post"
+                      class="ui form">
+                    <div>
+                        <!--        隐藏域：草稿还是发布 保存按钮则为草稿、发布按钮则为发布-->
+                        <div class="field mb-3"><input type="hidden" name="published" th:value="*{published}">
+                            <!--发布状态--></div>
+                        <div class="field mb-3"><input type="hidden" name="id" th:value="*{id}"> <!--        博客id-->
+                        </div>
+
+                        <!--        其他属性则为输入  -->
+                        <!--          flag为下拉菜单选择-->
+                        <div class="field mb-3">
+                            <!--            标题  -->
+                            <label>标题
+                                <input class="form-control" type="text" name="title" placeholder="20字符以内"
+                                       th:value="*{title}"></label>
+                        </div>
+                        <!--required表示必须要填-->
+                        <div class="required field mb-3">
+                            <a>创作类型</a>
+                            <select class="form-select" name="flag" aria-label="Default select example"
+                                    th:placeholder="请选择.." th:value="*{flag}">
+                                <!--          选择的类型：-->
+                                <option value="原创">原创</option>
+                                <option value="转载">转载</option>
+                                <option value="翻译">翻译</option>
+                            </select>
+
+                        </div>
+
+
+                    <!--类型：-->
+                    <div class="required field mb-3">
+
+                        <!--         typeId 会将id值赋给blog的typeId -->
+                        <!--          需要加一次查找,如果找不到，就插入新的type 设置到blog-->
+                        <!--原始的类型id记忆它原始的类型id  根据类型名来看id是否存在，存在则无需插入，否则需要插入-->
+                        <input type="hidden" name="typeId"  th:value="*{typeId} != null ? *{typeId}:null">
+                        <input type="text" name="type.name" list="select_type" placeholder="输入自定义类型" th:value="*{type}!=null?*{type.name}:''">
+                        <!--          这个则是用来显示给前端看的value框  -->
+                        <datalist id="select_type">
+<!--                            th:value="${type.id} -->
+                            <option th:each="type:${types}" th:value="${type.name}"></option>
+                            <!--            这里添加ajax，动态添加id name到数据库里面 ，同时允许动态删除-->
+                        </datalist>
+                        <!--         type.name 会将name值赋给blog的type对象 -->
+<!--                        后端将查询类型数据库，看id和name是否匹配，不匹配则执行插入type操作 -->
+
+                    </div>
+                    <!--        标签  输入框，以,号隔开即可  然后最多允许输入三个标签   这里改为input标签-->
+                    <div class="required field mb-3">
+                        <a>标签</a>
+                        <!--          tagIds: 1,2,3,4...  这里如何让input和select嵌入一起-->
+                        <input id="tagIds" type="hidden" name="tagIds" th:value="*{tagIds}">
+                        <select id="select_tag" class="form-select" aria-label="Default select example">
+                            <option value="" disabled selected hidden>选择标签（最多三个）</option>
+                            <option th:each="tag:${tags}" th:value="${tag.id}" th:text="${tag.name}">
+                            </option>
+                        </select>
+                        <input class="form-select" id="tagName" placeholder="输入标签(#号隔开)" name="input_tags" list="select_tag">
+<!--                        也传到tagIds，处理一波，选择三个能够转换的标签表示 -->
+                    </div>
+                    <!-- 博客的大头照 -->
+                    <div class="field">
+                        <div class="ui left labeled input">
+                            <label class="ui teal basic label">博客图标</label>
+                            <!--              这里应该改为文件上传  -->
+                            <input type="file" name="firstPicture" th:value="*{firstPicture}" placeholder="首图引用地址">
+                        </div>
+                    </div>
+                    <!--博客内容，隐藏-->
+                    <div class="required field">
+                        <!--              content应该改为拉取md文件，然后使用md组件渲染-->
+                        <textarea style="display: none" name="content" th:text="*{content}" placeholder="博客内容..."
+                                  maxlength="300"></textarea>
+                    </div>
+<!--                        赞赏、推荐、转载声明、是否允许评论-->
+                    <div class="inline fields mb-3">
+                        <!--          推荐单选框 -->
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="recommend" name="recommend" checked th:checked="*{recommend}"
+                                       class="hidden">
+                                <label for="recommend">推荐</label>
+                            </div>
+                        </div>
+                        <!--          转载声明  -->
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="shareStatement" name="shareStatement"
+                                       th:checked="*{shareStatement}" class="hidden">
+                                <label for="shareStatement">转载声明</label>
+                            </div>
+                        </div>
+                        <!--允许打赏-->
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="appreciation" name="appreciation"
+                                       th:checked="*{appreciation}" class="hidden">
+                                <label for="appreciation">赞赏</label>
+                            </div>
+                        </div>
+                        <!--允许评论-->
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="commentabled" name="commentabled"
+                                       th:checked="*{commentabled}" class="hidden">
+                                <label for="commentabled">评论</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 错误信息-->
+                    <div class="ui error message"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="save-btn" class="btn btn-secondary">保存</button>
+                <button type="button" id="publish-btn" class="btn btn-primary">发布</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<th:block th:replace="admin/_fragments :: script">
+</th:block>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+
+    $('#save-btn').click(function () {     //点击保存，修改发布状态为false
+        $('[name="published"]').val(false);
+        $('#blog-form').submit();
+    });
+
+    $('#publish-btn').click(function () {   //点击发布，修改发布状态为true
+        $('[name="published"]').val(true);
+        $('#blog-form').submit();
+    });
+    //表单校验
+    $('.ui.form').form({    //表单元素非空验证
+        fields: {
+            title: {
+                identifier: 'title',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客标题'
+                }]
+            },
+            content: {
+                identifier: 'content',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客内容'
+                }]
+            },
+            type: {
+                identifier: 'type.name',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客分类'
+                }]
+            }
+        }
+    });
+
+    $(function () {
+        $("#select_tag").change(function () {
+            var selectTag = document.getElementById("select_tag");
+            var index = selectTag.selectedIndex;
+            var value1 = selectTag.options[index].value;//这个单选框绑定的value
+            var value2 = selectTag.options[index].innerText;//这个单选框绑定的value
+            //alert("value1"+value1);//id   th:value绑定的
+            // alert("value2"+value2);//option显示的值
+            //选择的值必须以，号隔开
+            var tagValue = document.getElementById('tagName').value;
+
+            if (tagValue.split('#').length > 3) {//必然已经选了三个
+                alert("标签只能选择三个！");
+                return;
+            }
+            for(var j=0;j<tagValue.length;j++){
+                if(tagValue.charAt(j)===','||tagValue.charAt(j)===','||tagValue.charAt(j)===';'||tagValue.charAt(j)==='/'|tagValue.charAt(j)==='\\'){
+                    alert("输入标签不合法(#号隔开，最多三个标签)");
+                    return;
+                }
+            }
+            var tagIds = document.getElementById('tagIds').value;
+            document.getElementById('tagName').value = tagValue + value2+"#";
+            document.getElementById('tagIds').value = tagIds + "," + value1;
+
+        });
+    });
+    // laiyui可以后台动态加载下拉框
+    //    带编辑的下拉框
+    $('#editable-select').editableSelect();
+</script>
+</body>
+
+</html>

@@ -5,115 +5,123 @@
   <meta charset="UTF-8">
   <title>博客管理</title>
 </head>
-
 <body>
-
   <!--头部导航-->
-  <nav th:replace="admin/_fragments :: menu(1)">
-
-  </nav>
-
+  <nav th:replace="admin/_fragments :: menu(1)"></nav>
   <div class="ui attached pointing menu">
-    <div class="ui container">
-      <div class="right menu">
-        <a href="#" th:href="@{/admin/blogs/input}" class=" item">发布</a>
-        <a href="#" th:href="@{/admin/blogs}" class="teal active item">列表</a>
+      <div class="ui container">
+          <div class="right menu">
+              <a href="#" th:href="@{/admin/blogs/input}" class=" item">新建博客</a>
+              <a href="#" th:href="@{/admin/blogs}" class="teal active item">管理博客</a>
+          </div>
       </div>
-    </div>
   </div>
-
-
   <!--中间内容-->
   <div  class="m-container-small m-padded-tb-big">
     <div class="ui container">
-
       <div  class="ui secondary segment form">
-        <!--查询表单需要是form提交数据-->
+        <!--   搜索表单  后续可以扩展为一个搜索引擎，使用es的哪种 -->
         <form th:action="@{/admin/blogs/search}" method="post" class="ui segment form">
-
           <!--fields代表一个区域,inline缩短区域的效果-->
         <div class="inline fields">
+<!--            按照标题搜索-->
           <div class="field">
             <input type="text" name="title" placeholder="标题">
           </div>
+<!--            按照类型搜索  -->
           <div class="field">
             <!--dropdown是下拉框效果-->
             <div class="ui labeled action input">
               <div class="ui type selection dropdown">
+                <!-- 类型id 绑定到下拉菜单的type.id--》type.name   -->
                 <input type="hidden" name="typeId">
                 <i class="dropdown icon"></i>
                 <div class="default text">分类</div>
                 <!--menu是菜单-->
                 <div class="menu">
-                  <div  th:each="type : ${types}" th:data-value="${type.id}" th:text="${type.name}" class="item" data-value="1"  >错误日志</div>
+<!--                    /admin/blogs时会在model放入一个type和tage-->
+                  <div  th:each="type : ${types}" th:data-value="${type.id}"
+                        th:text="${type.name}" class="item" data-value="1">技术博客</div>
                 </div>
               </div>
-              <button id="clear-btn" class="ui compact button">clear</button>
-            </div>
-
-          </div>
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" id="recommend" name="recommend">
-              <label for="recommend">推荐</label>
             </div>
           </div>
           <div class="field">
-            <button  type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
+<!--              是否为 推荐 -->
+              <div class="ui type selection dropdown">
+                  <!-- 类型id 绑定到下拉菜单的type.id--》type.name   -->
+                  <input type="hidden" id="recommend" name="recommend">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">是否推荐</div>
+                  <!--menu是菜单-->
+                  <div class="menu">
+                      <div class="item" data-value="true">是</div>
+                      <div class="item" data-value="false">否</div>
+                  </div>
+              </div>
+              <!--            搜索按钮 提交表单重新搜索-->
+              <input  type="submit" value="搜索" class="ui mini teal basic button"/>
+          </div>
           </div>
         </div>
         </form>
-
       <div id="table-container">
+<!--        table-->
         <table th:fragment="blogList" class="ui compact teal table">
-          <thead>
-          <tr>
-            <th></th>
-            <th>标题</th>
-            <th>类型</th>
-            <th>推荐</th>
-            <th>状态</th>
-            <th>更新时间</th>
-            <th>操作</th>
-          </tr>
-          </thead>
+<!--          表头-->
+          <thead><tr>
+            <th></th><th>标题</th><th>类型</th><th>推荐</th><th>状态</th><th>更新时间</th><th>操作</th>
+          </tr></thead>
+<!--          表的主体内容-->
           <tbody>
+        <!--   表达式遍历分页对象  我们设置了分页大小为5   后续可添加一个功能为文件夹格式来展示-->
           <tr th:each="blog, iterStat : ${pageInfo.list}">
+        <!--   当前的索引-->
             <td th:text="${iterStat.count}">1</td>
-            <td th:text="${blog.title}">刻意练习清单</td>
-            <td th:text="${blog.type.name}">认知升级</td>
-            <td th:text="${blog.recommend} ? '是':'否'">是</td>
-            <td th:text="${blog.published} ? '发布':'草稿'">发布</td>
+        <!--    blog的标题 -->
+            <td th:text="${blog.title}">牛逼的人生</td>
+        <!--   blog的类型 -->
+            <td th:text="${blog.type.name}">传记</td>
+        <!-- 推荐-->
+            <td th:text="${blog.recommend}==true ? '是':'否'">是</td>
+        <!--是否已经发布 -->
+            <td th:text="${blog.published}==true ? '发布':'草稿'">发布</td>
+        <!-- 更新日期 -->
             <td th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2020-3-02</td>
             <td>
-              <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}" class="ui mini teal basic button">编辑</a>
-              <a href="#" th:href="@{/admin/blogs/{id}/delete(id=${blog.id})}" class="ui mini red basic button">删除</a>
+              <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}"
+                 class="ui mini teal basic button">编辑</a>
+              <a href="#" th:href="@{/admin/blogs/{id}/delete(id=${blog.id})}"
+                 class="ui mini red basic button">删除</a>
             </td>
           </tr>
           </tbody>
+<!--          表的尾部-->
           <tfoot>
-          <tr>
-            <th colspan="7">
+<!--          7个栅格-->
+            <tr><th colspan="7">
               <div class="ui mini pagination menu"  >
                 <div class="item"><a th:href="@{/admin/blogs}">首页</a></div>
+                <!-- 上下页-->
                 <div class="item"><a th:href="@{/admin/blogs(pagenum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a></div>
                 <div class="item"><a th:href="@{/admin/blogs(pagenum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a></div>
                 <div class="item"><a th:href="@{/admin/blogs(pagenum=${pageInfo.pages})}">尾页</a></div>
               </div>
+                <div class="ui mini
+                 m-inline-block">
+                    <p >当前第<span th:text="${pageInfo.pageNum}"></span>页，总
+                        <span th:text="${pageInfo.pages}"></span>页，共<span th:text="${pageInfo.total}"></span>条记录</p>
+                </div>
               <a href="#"  th:href="@{/admin/blogs/input}" class="ui mini right floated teal basic button">新增</a>
-            </th>
-          </tr>
+            </th></tr>
+
           </tfoot>
         </table>
-
-        <div class="ui segment m-inline-block">
-          <p >当前第<span th:text="${pageInfo.pageNum}"></span>页，总<span th:text="${pageInfo.pages}"></span>页，共<span th:text="${pageInfo.total}"></span>条记录</p>
-        </div>
 
         <div class="ui success message" >
           <i class="close icon"></i>
           <div class="header">提示：</div>
-          <p th:text="${msg}">恭喜，操作成功！</p>
+          <p th:text="${message}">恭喜，操作成功！</p>
         </div>
 
       </div>

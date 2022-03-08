@@ -2,10 +2,16 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yuyefanhua.blobsystem.dao.TagDao">
+<mapper namespace="com.yuyefanhua.blogsystem.dao.TagDao">
+    <select id="size" resultType="long">
+        select count(*) from t_tag
+    </select>
 <!--    根据标签id查找标签的名-->
     <select id="getTag" resultType="Tag">
         select id,name from t_tag where id = #{id}
+    </select>
+    <select id="getMaxId" resultType="long">
+        select max(id) from t_tag;
     </select>
 <!--添加一个标签 -->
     <insert id="saveTag" parameterType="Tag">
@@ -28,7 +34,7 @@
     </resultMap>
 
     <select id="getAllTag" resultType="Tag">
-        select * from blog.t_tag
+        select * from t_tag
     </select>
 <!--联合查询，返回的是结果集tags  t_tag记录的是标签的属性，t_tags记录都是博客和标签id的关联属性  -->
     <select id="getBlogTag" resultMap="tags">

@@ -5,41 +5,30 @@
   <meta charset="UTF-8">
   <title>博客管理</title>
 </head>
-
 <body>
-
-  <!--头部导航-->
+  <!--头部导航 包括菜单选项：博客、分类、标签、爱好、技术栈、个人头像和昵称显示-->
   <nav th:replace="admin/_fragments :: menu(0)"></nav>
-
-
   <!--中间内容-->
   <div  class="m-container-small m-padded-tb-big">
-    <div class="ui container">
+    <div class="ui container" >
       <div class="ui success large  message">
         <h3>Hi,</h3>
-        <p>XXX，欢迎登录！</p><p>网站昨天浏览人数为</p>
+<!--        显示欢迎词语-->
+        <p><label th:text="${session.user.nickname}">XXX</label>，欢迎登录！</p><p>网站昨天浏览人数为</p>
+<!--      这个浏览人数，需要使用views数据表来显示 -->
         2312
       </div>
-
-      <div class="ui form">
-        <div class="field">
-          <label>Text</label>
-          <textarea></textarea>
-        </div>
-      </div>
-      <!--登录成功图片-->
-      <img th:src="@{/static/images/bg1.jpeg}" alt="#" class="ui rounded bordered fluid image">
     </div>
   </div>
   <br>
   <br>
   <!--底部footer-->
+<!--  底部的版权和联系我的方式 -->
   <footer th:replace="admin/_fragments :: footer">
   </footer>
   <th:block th:replace="admin/_fragments :: script">
-
   </th:block>
-
+<!--移动端隐藏-->
   <script>
     $('.menu.toggle').click(function () {
       $('.m-item').toggleClass('m-mobile-hide');
@@ -48,7 +37,6 @@
     $('.ui.dropdown').dropdown({
       on : 'hover'
     });
-
   </script>
 </body>
 </html>

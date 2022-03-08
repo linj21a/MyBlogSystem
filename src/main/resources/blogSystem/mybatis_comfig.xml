@@ -5,7 +5,7 @@
 <configuration>
     <!-- 对象命名空间 -->
     <typeAliases>
-        <typeAlias alias="Blob" type="com.yuyefanhua.blobsystem.domain.Blog"/>
+        <typeAlias alias="Blog" type="com.yuyefanhua.blogsystem.domain.Blog"/>
     </typeAliases>
     <mappers>
     </mappers>
